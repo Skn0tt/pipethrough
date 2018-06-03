@@ -1,0 +1,16 @@
+{
+  "name": "pipethrough",
+  "version": "0.0.1",
+  "description": "Pipes a file through a given docker image and back.",
+  "main": "src/index.ts",
+  "author": "Simon Knott",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "dockerode": "^2.5.5",
+    "ts-node": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/dockerode": "^2.5.4"
+  }
+}
