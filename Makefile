@@ -1,6 +1,3 @@
-IMAGE_TAG ?= skn0tt/pipethrough:latest
+pipethrough:
+	$(MAKE) -C packages/pipethrough build
 
-build: src/**/*.ts package.json yarn.lock
-	docker build \
-		-t $(IMAGE_TAG) \
-		.

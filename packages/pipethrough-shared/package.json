@@ -1,0 +1,9 @@
+{
+  "name": "pipethrough-shared",
+  "version": "0.0.1",
+  "description": "Shared code for pipethrough",
+  "main": "src/index.ts",
+  "author": "Simon Knott",
+  "license": "MIT",
+  "private": true
+}
