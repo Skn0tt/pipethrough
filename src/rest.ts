@@ -2,41 +2,17 @@ import express, { Request, Response, NextFunction } from "express";
 import multer from "multer";
 import wrapAsync from "express-wrap-async";
 import * as Docker from "./docker";
-import socket from "socket.io";
 import http from "http";
 import { generateId } from "./util";
-import { Observable } from "rxjs";
 import cors from "cors";
+import * as socket from "./socket";
 
 const app = express();
 const server = new http.Server(app);
 
 app.use(cors())
 
-const io = socket(server);
-
-const clients = new Map<string, Observable<string>>();
-
-io.on("connection", socket => {
-  const id = socket.handshake.query.id as string | undefined;
-  if (!id) {
-    console.error("No ID given.");
-    return;
-  }
-  console.log(`Client connected: ${id}`)
-
-  const log = clients.get(id);
-  if (!log) {
-    console.error("ID not found.");
-    return;
-  }
-
-  log.subscribe(
-    s => socket.emit("data", s),
-    e => socket.emit("error", e),
-    () => socket.emit("complete")
-  )
-})
+socket.setup(server);
 
 const upload = multer({ dest: "/Users/skn0tt/Documents/dev/tmp/pipethrough/uploads/" });
 
@@ -58,7 +34,7 @@ app.post("/pipe/socket",
 
     const logs = await Docker.pipeRx(files as Express.Multer.File[]);
     const id = generateId();
-    clients.set(id, logs);
+    socket.addClient(id, logs);
 
     return res.status(200).send(id);
   })
