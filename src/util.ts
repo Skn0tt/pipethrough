@@ -1,4 +1,5 @@
-import { Readable } from "stream";
+import * as crypto from "crypto";
+import { streamToStringRx } from 'rxjs-stream';
 
 export const readStream = (stream: NodeJS.ReadableStream) => new Promise<string>((resolve, reject) => {
   let result = "";
@@ -12,3 +13,7 @@ export const readStream = (stream: NodeJS.ReadableStream) => new Promise<string>
     reject
   })
 })
+
+export const streamToObservable = streamToStringRx
+
+export const generateId = () => crypto.randomBytes(48).toString("hex");

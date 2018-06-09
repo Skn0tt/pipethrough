@@ -1,8 +1,8 @@
 import Dockerode, { ContainerCreateOptions } from "dockerode";
 import * as config from "./config";
 import R from "ramda";
-import { Stream } from "stream";
-import { readStream } from "./util";
+import { readStream, streamToObservable } from "./util";
+import { Observable } from "rxjs";
 
 const { IMAGE, PULL_IMAGE } = config.get();
 
@@ -14,7 +14,23 @@ const containerLogs = async (container: Dockerode.Container): Promise<string> =>
 }
 
 type Files = Express.Multer.File[];
-export const pipe = async (files: Files) => {
+export const pipe = async (files: Files): Promise<String> => {
+  const logsStream = await pipeStream(files);
+  return await readStream(logsStream);
+};
+
+export const pipeRx = async (files: Files): Promise<Observable<string>> => {
+  new Observable()
+  const logsStream = await pipeStream(files);
+  return streamToObservable(logsStream);
+}
+
+const pipeStream = async (files: Files): Promise<NodeJS.ReadableStream> => {
+  const container = await startContainer(files);
+  return container.logs({ follow: true, stdout: true });
+}
+
+const startContainer = async (files: Files): Promise<Dockerode.Container> => {
   const Binds = filesToBinds(files)
   const container = await docker.createContainer({
     Image: IMAGE,
@@ -26,8 +42,8 @@ export const pipe = async (files: Files) => {
     }
   });
   await container.start();
-  return await containerLogs(container);
-};
+  return container;
+}
 
 type Volumes = string[]
 const filesToBinds = R.pipe<Files, Volumes>(
