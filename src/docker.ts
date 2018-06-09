@@ -1,7 +1,7 @@
 import Dockerode, { ContainerCreateOptions } from "dockerode";
 import * as config from "./config";
 import R from "ramda";
-import { readStream, streamToObservable } from "./util";
+import { readStream, streamToReplaySubject } from "./util";
 import { Observable } from "rxjs";
 
 const { IMAGE, PULL_IMAGE } = config.get();
@@ -22,7 +22,7 @@ export const pipe = async (files: Files): Promise<String> => {
 export const pipeRx = async (files: Files): Promise<Observable<string>> => {
   new Observable()
   const logsStream = await pipeStream(files);
-  return streamToObservable(logsStream);
+  return streamToReplaySubject(logsStream);
 }
 
 const pipeStream = async (files: Files): Promise<NodeJS.ReadableStream> => {

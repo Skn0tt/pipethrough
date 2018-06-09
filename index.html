@@ -12,18 +12,27 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
 
   <script>
+    const output = document.getElementById("output");
+
     const fetchId = async () => {
       const res = await fetch("http://localhost:3000/pipe/socket", {
         method: "POST"
       })
       return await res.text();
     }
+
     const onClick = async () => {
+      clear();
+
       const id = await fetchId();
       const socket = io("http://localhost:3000", { query: `id=${id}` });
-      socket.on("data", document.writeln)
+      socket.on("data", append)
       socket.on("error", console.error);
+      socket.on("complete", () => append("complete"));
     }
+
+    const append = s => output.textContent += s;
+    const clear = () => output.textContent = "";
   </script>
 </body>
 </html>

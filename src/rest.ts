@@ -31,10 +31,11 @@ io.on("connection", socket => {
     return;
   }
 
-  log.subscribe(s => {
-    console.log(s);
-    socket.emit("data", s);
-  })
+  log.subscribe(
+    s => socket.emit("data", s),
+    e => socket.emit("error", e),
+    () => socket.emit("complete")
+  )
 })
 
 const upload = multer({ dest: "/Users/skn0tt/Documents/dev/tmp/pipethrough/uploads/" });
