@@ -14,7 +14,7 @@ app.use(cors())
 
 socket.setup(server);
 
-const upload = multer({ dest: "/Users/skn0tt/Documents/dev/tmp/pipethrough/uploads/" });
+const upload = multer({ dest: "/usr/app/uploads" });
 
 app.post("/pipe",
   upload.any(),
