@@ -6,7 +6,8 @@ Form label is the mounting path.
 
 # Configuration
 
-| Env | Meaning |
-| IMAGE | Image to execute |
-| PULL_IMAGE | Try to pull image |
-| CMD | Command to execute |
+| Env         |  Meaning            |
+| ----------- | ------------------- |
+| IMAGE       |  Image to execute   |
+|  PULL_IMAGE |  Try to pull image  |
+| CMD         |  Command to execute |
